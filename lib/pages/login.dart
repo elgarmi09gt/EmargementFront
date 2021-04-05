@@ -21,23 +21,58 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Container buttonSection() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 40.0,
+      margin: EdgeInsets.only(top: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: RaisedButton(
+        onPressed: () {
+          signIn();
+        },
+        color: Colors.purple,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        child: Text(
+          "Login",
+          style: TextStyle(color: Colors.white70),
+        ),
+      ),
+    );
+  }
+
   Container textSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       margin: EdgeInsets.only(top: 30.0),
       child: Column(
         children: [
-          txtSection("Login ", Icons.email),
+          txtEmailSection("Login ", Icons.email),
           SizedBox(height: 30.0),
-          txtSection("Mot de Passe", Icons.lock),
+          txtPassSection("Mot de Passe", Icons.lock),
         ],
       ),
     );
   }
 
-  TextFormField txtSection(String title, IconData iconData) {
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passController = new TextEditingController();
+
+  TextFormField txtEmailSection(String title, IconData iconData) {
     return TextFormField(
-      obscureText: title == "Mot de Passe" ? true : false,
+      controller: emailController,
+      style: TextStyle(color: Colors.white70),
+      decoration: InputDecoration(
+          hintText: title,
+          hintStyle: TextStyle(color: Colors.white70),
+          icon: Icon(iconData)),
+    );
+  }
+
+  TextFormField txtPassSection(String title, IconData iconData) {
+    return TextFormField(
+      controller: passController,
+      obscureText: true,
       style: TextStyle(color: Colors.white70),
       decoration: InputDecoration(
           hintText: title,
