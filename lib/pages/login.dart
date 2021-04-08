@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -6,6 +7,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,25 +23,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Container buttonSection() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 40.0,
-      margin: EdgeInsets.only(top: 30.0),
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: RaisedButton(
-        onPressed: () {
-          signIn();
-        },
-        color: Colors.purple,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        child: Text(
-          "Login",
-          style: TextStyle(color: Colors.white70),
-        ),
-      ),
-    );
+  signIn(String login, String pass) async {
+    Map data = {'username': login, 'password': pass};
+    var url = "http://localhost:3000/auth/login";
+    var response =await http.post(url, body: data);
   }
+
+  http() => http;
 
   Container textSection() {
     return Container(
@@ -51,6 +41,29 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 30.0),
           txtPassSection("Mot de Passe", Icons.lock),
         ],
+      ),
+    );
+  }
+
+  Container buttonSection() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 40.0,
+      margin: EdgeInsets.only(top: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: RaisedButton(
+        onPressed: () {
+          setState(() {
+            _isLoading = true;
+          });
+          signIn(emailController.text, passController.text);
+        },
+        color: Colors.purple,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        child: Text(
+          "Login",
+          style: TextStyle(color: Colors.white70),
+        ),
       ),
     );
   }
