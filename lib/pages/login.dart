@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   signIn(String login, String pass) async {
     Map data = {'username': login, 'password': pass};
     var url = "http://localhost:3000/auth/login";
-    var response =await http.post(url, body: data);
   }
 
   http() => http;
