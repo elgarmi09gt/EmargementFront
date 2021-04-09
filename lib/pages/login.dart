@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,18 +20,28 @@ class _LoginPageState extends State<LoginPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter),
       ),
-      child: ListView(
-        children: [hearderSection(), textSection(), buttonSection()],
-      ),
+      child: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView(
+              children: [hearderSection(), textSection(), buttonSection()],
+            ),
     );
   }
 
   signIn(String login, String pass) async {
+    var jsonData;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map data = {'username': login, 'password': pass};
     var url = "http://localhost:3000/auth/login";
+    var response = await http.post(url, body: data);
+    if (response.statusCode == 200) {
+      jsonData = json.decode(response.body);
+      setState(() {
+        _isLoading = false;
+        sharedPreferences.setString("token", jsonData["token"]);
+      });
+    }
   }
-
-  http() => http;
 
   Container textSection() {
     return Container(
